@@ -15,4 +15,4 @@ app.use(router);
 
 app.listen(PORT, () => {
     console.log(`Server online, running on port: ${PORT}`);
-})
+});

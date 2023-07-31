@@ -11,7 +11,7 @@ const configDatabase = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-    consigDatabase.ssl = true;
+    configDatabase.ssl = true;
 }
 
 const db = new Pool(configDatabase);
