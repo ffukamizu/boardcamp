@@ -28,7 +28,7 @@ export async function postGames(req, res) {
             [name]
         );
 
-        if (games.rows.length > 0) return res.status(400).send('Game already registered');
+        if (games.rows.length > 0) return res.status(409).send('Game already registered');
 
         await db.query(`INSERT INTO games ("name", "image", "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4);`, [name, image, stockTotal, pricePerDay]);
 

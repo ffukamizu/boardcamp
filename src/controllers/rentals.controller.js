@@ -69,7 +69,7 @@ export async function postRentals(req, res) {
             [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * game.rows[0].pricePerDay, null]
         );
 
-         res.sendStatus(201);
+        res.sendStatus(201);
     } catch (err) {
         res.status(500).send(err.message);
     }
