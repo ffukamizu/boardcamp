@@ -94,16 +94,20 @@ export async function postRentalsId(req, res) {
 
         const feePerDay = Number(rentals.rows[0].originalPrice) / Number(rentals.rows[0].daysRented);
 
-        const delayAmount = dayjs(returnDate).format('x') - dayjs(rentals.rows[0].rentDate).format('x');
+        const returnDateObj = dayjs(returnDate);
+        const rentDateObj = dayjs(rentals.rows[0].rentDate);
 
-        const fee = feePerDay * delayAmount;
+        const timeDifferenceMs = returnDateObj.diff(rentDateObj);
 
-        const delayFee = fee < 0 ? 0 : fee;
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+        const daysDifference = Math.round(timeDifferenceMs / millisecondsPerDay);
+
+        const delayFee = Math.max(feePerDay * daysDifference, 0);
 
         await db.query(
             `
             UPDATE rentals
-            SET "returnDate" = $1, "delayFee" = $2, 
+            SET "returnDate" = $1, "delayFee" = $2 
             WHERE "id" = $3;
             `,
             [returnDate, delayFee, id]
