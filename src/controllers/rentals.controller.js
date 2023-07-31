@@ -52,12 +52,12 @@ export async function postRentals(req, res) {
             `
             SELECT COUNT(*)
             FROM rentals
-            WHERE "gameId" = $1 AND "returnDate" IS null;
+            WHERE "gameId" = $1 AND "returnDate" IS NULL;
             `,
             [gameId]
         );
 
-        if (Number(rented.rows[0].count) >= Number(game.rows[0].stockTotal)) {
+        if (Number(rentals.rows[0].count) >= Number(games.rows[0].stockTotal)) {
             return res.status(400).send('No copies available');
         }
 
@@ -66,7 +66,7 @@ export async function postRentals(req, res) {
             INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate, "originalPrice", "delayFee")
             VALUES ($1, $2, $3, $4, $5, $6, $7);
             `,
-            [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * game.rows[0].pricePerDay, null]
+            [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * games.rows[0].pricePerDay, null]
         );
 
         res.sendStatus(201);
