@@ -9,7 +9,7 @@ export async function getGames(req, res) {
             `
         );
 
-        res.status(200).send(games.rows);
+        res.status(201).send(games.rows);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -31,6 +31,8 @@ export async function postGames(req, res) {
         if (games.rows.length > 0) return res.status(400).send('Game already registered');
 
         await db.query(`INSERT INTO games ("name", "image", "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4);`, [name, image, stockTotal, pricePerDay]);
+
+        return res.status(201).send('Game created');
     } catch (err) {
         res.status(500).send(err.message);
     }

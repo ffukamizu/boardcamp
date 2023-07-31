@@ -68,6 +68,8 @@ export async function postRentals(req, res) {
             `,
             [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * game.rows[0].pricePerDay, null]
         );
+
+         res.sendStatus(201);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -112,6 +114,8 @@ export async function postRentalsId(req, res) {
             `,
             [returnDate, delayFee, id]
         );
+
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -141,6 +145,8 @@ export async function deleteRentals(req, res) {
             `,
             [id]
         );
+
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).send(err.message);
     }

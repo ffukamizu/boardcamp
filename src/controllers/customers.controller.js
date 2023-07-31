@@ -58,6 +58,8 @@ export async function postCustomers(req, res) {
         `,
             [name, phone, cpf, birthday]
         );
+
+        res.status(201).send('Created successfully');
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -89,6 +91,8 @@ export async function putCustomers(req, res) {
         `,
             [name, phone, cpf, birthday, id]
         );
+
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).send(err.message);
     }
