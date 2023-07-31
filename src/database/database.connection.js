@@ -23,4 +23,4 @@ try {
     (err) => console.log(err.message || err);
 }
 
-export default db;
+export default { db };
