@@ -20,7 +20,7 @@ try {
     await db.connect();
     console.log('PG Database online');
 } catch (err) {
-    (err) => console.log(err.message || err);
+    (err) => console.log(err.message);
 }
 
-export default { db };
+export default db ;
