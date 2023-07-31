@@ -4,7 +4,7 @@ export async function getCustomers(req, res) {
     try {
         const customers = await db.query(
             `
-            SELECT * 
+            SELECT id, name, phone, cpf, TO_CHAR(birthday, 'YYYY-MM-DD') AS birthday 
             FROM customers;
             `
         );
