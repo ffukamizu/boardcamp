@@ -74,7 +74,43 @@ export async function postRentals(req, res) {
 }
 
 export async function postRentalsId(req, res) {
-    
+    const { id } = req.params;
+
+    try {
+        const rentals = await db.query(
+            `
+            SELECT *
+            FROM rentals
+            WHERE "id" = $1;
+            `,
+            [id]
+        );
+
+        if (rentals.rows.length === 0) return res.sendStatus(404);
+
+        if (rentals.rows[0].returnDate !== null) return res.sendStatus(400);
+
+        const returnDate = dayjs(Date.now()).format('YYYY-MM-DD');
+
+        const feePerDay = Number(rentals.rows[0].originalPrice) / Number(rentals.rows[0].daysRented);
+
+        const delayAmount = dayjs(returnDate).format('x') - dayjs(rentals.rows[0].rentDate).format('x');
+
+        const fee = feePerDay * delayAmount;
+
+        const delayFee = fee < 0 ? 0 : fee;
+
+        await db.query(
+            `
+            UPDATE rentals
+            SET "returnDate" = $1, "delayFee" = $2, 
+            WHERE "id" = $3;
+            `,
+            [returnDate, delayFee, id]
+        );
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 }
 
 export async function deleteRentals(req, res) {
