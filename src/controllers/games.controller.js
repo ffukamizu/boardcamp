@@ -5,7 +5,7 @@ export async function getGames(req, res) {
         const games = await db.query(
             `
             SELECT * 
-            FROM games
+            FROM games;
             `
         );
 

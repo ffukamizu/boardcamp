@@ -5,7 +5,7 @@ export async function getCustomers(req, res) {
         const customers = await db.query(
             `
             SELECT * 
-            FROM customers
+            FROM customers;
             `
         );
 
@@ -44,7 +44,7 @@ export async function postCustomers(req, res) {
             `
         SELECT *
         FROM customers
-        WHERE cpf = $1
+        WHERE cpf = $1;
         `,
             [cpf]
         );
