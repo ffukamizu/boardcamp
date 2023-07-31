@@ -1,26 +1,18 @@
-import pg from 'pg';
-import dotenv from 'dotenv';
+import pg from "pg"
+import dotenv from "dotenv"
 
-dotenv.config();
 
-const { Pool } = pg;
+dotenv.config()
+
+const { Pool } = pg
 
 const configDatabase = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: false,
-};
-
-if (process.env.NODE_ENV === 'production') {
-    configDatabase.ssl = true;
+  connectionString: process.env.DATABASE_URL,
 }
 
-const db = new Pool(configDatabase);
+if (process.env.NODE_ENV === "production") configDatabase.ssl = true;
 
-try {
-    await db.connect();
-    console.log('PG Database online');
-} catch (err) {
-    (err) => console.log(err.message);
-}
+
+export const db = new Pool(configDatabase)
 
 export default db ;
