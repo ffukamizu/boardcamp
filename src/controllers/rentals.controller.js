@@ -4,8 +4,7 @@ import dayjs from 'dayjs';
 export async function getRentals(req, res) {
     try {
         const rentals = await db.query(
-            `
-            SELECT rentals.*, 
+            `SELECT rentals.*, 
                 JSON_BUILD_OBJECT("id", customers.id, "name", customers.name as customer, 
                 JSON_BUILD_OBJECT("id", games.id, "name", games.name) as game,
                 TO_CHAR(rentals."rentDate", 'YYYY-MM-DD') AS "rentDate",
@@ -27,8 +26,7 @@ export async function postRentals(req, res) {
 
     try {
         const customers = await db.query(
-            `
-            SELECT *
+            `SELECT *
             FROM customers
             WHERE id = $1;
             `,
@@ -38,8 +36,7 @@ export async function postRentals(req, res) {
         if (customers.rows.length === 0) return res.sendStatus(404);
 
         const games = await db.query(
-            `
-            SELECT *
+            `SELECT *
             FROM games
             WHERE id = $1;
             `,
@@ -49,8 +46,7 @@ export async function postRentals(req, res) {
         if (games.rows.length === 0) return res.sendStatus(404);
 
         const rentals = await db.query(
-            `
-            SELECT COUNT(*)
+            `SELECT COUNT(*)
             FROM rentals
             WHERE "gameId" = $1 AND "returnDate" IS NULL;
             `,
@@ -62,8 +58,7 @@ export async function postRentals(req, res) {
         }
 
         await db.query(
-            `
-            INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
+            `INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
             VALUES ($1, $2, $3, $4, $5, $6, $7);
             `,
             [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * games.rows[0].pricePerDay, null]
@@ -80,8 +75,7 @@ export async function postRentalsId(req, res) {
 
     try {
         const rentals = await db.query(
-            `
-            SELECT *
+            `SELECT *
             FROM rentals
             WHERE "id" = $1;
             `,

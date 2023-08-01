@@ -3,8 +3,7 @@ import { db } from '../database/database.connection.js';
 export async function getGames(req, res) {
     try {
         const games = await db.query(
-            `
-            SELECT * 
+            `SELECT * 
             FROM games;
             `
         );
@@ -20,10 +19,9 @@ export async function postGames(req, res) {
 
     try {
         const games = await db.query(
-            `
-        SELECT * 
-        FROM games 
-        WHERE name = $1;
+            `SELECT * 
+            FROM games 
+            WHERE name = $1;
         `,
             [name]
         );
