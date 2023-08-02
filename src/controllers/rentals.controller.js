@@ -5,9 +5,9 @@ export async function getRentals(req, res) {
     try {
         const rentals = await db.query(
             `SELECT 
-                rentals.*, 
-                JSON_BUILD_OBJECT("id", customers.id, "name", customers.name) AS customer, 
-                JSON_BUILD_OBJECT("id", games.id, "name", games.name) as game,
+                rentals.*,
+                JSON_BUILD_OBJECT(customers.id, customers.id, customers.name, customers.name) as customer, 
+                JSON_BUILD_OBJECT(games.id, games.id, games.name, games.name) as game,
                 TO_CHAR(rentals."rentDate", 'YYYY-MM-DD') AS "rentDate",
                 TO_CHAR(rentals."returnDate", 'YYYY-MM-DD') AS "returnDate",
             FROM 
