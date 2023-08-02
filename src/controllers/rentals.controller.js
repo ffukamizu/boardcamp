@@ -6,7 +6,7 @@ export async function getRentals(req, res) {
         const rentals = await db.query(
             `SELECT 
                 rentals.*, 
-                JSON_BUILD_OBJECT("id", customers.id, "name", customers.name as customer, 
+                JSON_BUILD_OBJECT("id", customers.id, "name", customers.name) AS customer, 
                 JSON_BUILD_OBJECT("id", games.id, "name", games.name) as game,
                 TO_CHAR(rentals."rentDate", 'YYYY-MM-DD') AS "rentDate",
                 TO_CHAR(rentals."returnDate", 'YYYY-MM-DD') AS "returnDate",
@@ -75,6 +75,7 @@ export async function postRentals(req, res) {
                 rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
             VALUES 
                 ($1, $2, $3, $4, $5, $6, $7);
+
             `,
             [customerId, gameId, dayjs().format('YYYY-MM-DD'), daysRented, null, daysRented * games.rows[0].pricePerDay, null]
         );
@@ -105,18 +106,16 @@ export async function postRentalsId(req, res) {
         if (rentals.rows[0].returnDate !== null) return res.sendStatus(400);
 
         const returnDate = dayjs(Date.now()).format('YYYY-MM-DD');
-
-        const feePerDay = Number(rentals.rows[0].originalPrice) / Number(rentals.rows[0].daysRented);
-
-        const returnDateObj = dayjs(returnDate);
         const rentDateObj = dayjs(rentals.rows[0].rentDate);
+        const returnDateObj = dayjs(returnDate);
 
         const timeDifferenceMs = returnDateObj.diff(rentDateObj);
-
         const millisecondsPerDay = 24 * 60 * 60 * 1000;
-        const daysDifference = Math.round(timeDifferenceMs / millisecondsPerDay);
+        const daysDifference = Math.ceil(timeDifferenceMs / millisecondsPerDay);
 
+        const feePerDay = Number(rentals.rows[0].originalPrice) / Number(rentals.rows[0].daysRented);
         const delayFee = Math.max(feePerDay * daysDifference, 0);
+
 
         await db.query(
             `UPDATE 
